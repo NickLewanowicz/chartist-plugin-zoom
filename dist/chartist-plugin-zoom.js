@@ -58,7 +58,6 @@
         chart.on('created', function (data) {
           axisX = data.axisX;
           axisY = data.axisY;
-          console.log('Chart: ',axisX, axisY)
 
           chartRect = data.chartRect;
           svg = data.svg._node;
