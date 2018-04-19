@@ -24,6 +24,7 @@
     var defaultOptions = {
       // onZoom
       // resetOnRightMouseBtn
+      yZoom: true,
       pointClipOffset: 5
     };
 
@@ -41,7 +42,10 @@
         var rect, svg, axisX, axisY, chartRect;
         var downPosition;
         var onZoom = options.onZoom;
+        var yZoom = (options.yZoom == undefined) ? true : options.yZoom;
         var ongoingTouches = [];
+
+        defaultOptions.yZoom = yZoom;
 
         chart.on('draw', function (data) {
           var type = data.type;
@@ -54,6 +58,8 @@
         chart.on('created', function (data) {
           axisX = data.axisX;
           axisY = data.axisY;
+          console.log('Chart: ',axisX, axisY)
+
           chartRect = data.chartRect;
           svg = data.svg._node;
           rect = data.svg.elem('rect', {
@@ -221,6 +227,32 @@
             }
           }
         }
+
+        function getRect(firstPoint, secondPoint) {
+          var x = firstPoint.x;
+          var y = firstPoint.y;
+          var width = secondPoint.x - x;
+          var height = secondPoint.y - y;
+          if (width < 0) {
+            width = -width;
+            x = secondPoint.x;
+          }
+          if (height < 0) {
+            height = -height;
+            y = secondPoint.y;
+          }
+          if(!yZoom){
+            y = axisY.chartRect.y2
+            height = axisY.chartRect.height()
+          }
+    
+          return {
+            x: x,
+            y: y,
+            width: width,
+            height: height
+          };
+        }
       };
 
     };
@@ -246,6 +278,7 @@
         height = -height;
         y = secondPoint.y;
       }
+
       return {
         x: x,
         y: y,
